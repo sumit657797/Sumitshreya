@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Question for Shreya</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- Global Styles --- */
+        :root {
+            --primary-red: #e63946;
+            --primary-pink: #d6336c;
+            --light-pink-bg: #fce4ec; /* Light pink for background */
+            --text-dark: #333;
+            --font-cursive: 'Great Vibes', cursive;
+            --font-body: 'Poppins', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            font-family: var(--font-body);
+            background: linear-gradient(135deg, var(--light-pink-bg), #ffcdd2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* Prevents scrollbars from animations */
+            padding: 1rem;
+        }
+
+        /* --- Main Proposal Box --- */
+        .proposal-container {
+            position: relative;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2.5rem 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            min-height: 350px; 
+            border: 2px solid var(--primary-pink);
+        }
+
+        h1 {
+            font-family: var(--font-cursive);
+            font-size: 2.8rem;
+            color: var(--primary-pink);
+            font-weight: 400;
+            margin-bottom: 1rem;
+        }
+
+        .main-message {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-bottom: 2rem;
+            font-weight: 600;
+        }
+
+        /* --- Buttons --- */
+        .button-container {
+            position: relative; 
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        button {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: var(--font-body);
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        #yes-btn {
+            background-color: var(--primary-red);
+            color: white;
+            transition: all 0.3s ease;
+            position: relative; 
+            z-index: 2; /* Lower z-index so 'No' can cover it */
+        }
+
+        #yes-btn:hover {
+            transform: scale(1.1);
+            background-color: #d00000;
+        }
+
+        #no-btn {
+            background-color: #f1f1f1;
+            color: var(--text-dark);
+            border: 1px solid #ddd;
+            position: relative; /* Starts relative */
+            z-index: 5; /* Starts higher */
+            transition: all 0.3s ease, top 0.4s ease-out, left 0.4s ease-out;
+        }
+
+        #no-btn:hover {
+            transform: scale(1.1);
+            background-color: #e5e5e5;
+        }
+        
+        /* --- Funny 'No' Message --- */
+        .funny-message {
+            position: absolute;
+            top: -20px; 
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--primary-red);
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border-radius: 10px;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(230, 57, 70, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease-in-out, top 0.5s ease-in-out;
+            z-index: 100;
+            width: 90%; 
+            max-width: 400px;
+        }
+
+        .funny-message.show {
+            opacity: 1;
+            visibility: visible;
+            top: -60px; 
+        }
+
+        /* --- Base Heart Shape (for background and burst) --- */
+        .heart-shape {
+            position: absolute;
+            background-color: var(--primary-red);
+            height: 15px;
+            width: 15px;
+            transform: rotate(-45deg);
+        }
+
+        .heart-shape::before,
+        .heart-shape::after {
+            content: '';
+            background-color: inherit; 
+            border-radius: 50%;
+            height: 15px;
+            width: 15px;
+            position: absolute;
+        }
+
+        .heart-shape::before { top: -7.5px; left: 0; }
+        .heart-shape::after { top: 0; left: 7.5px; }
+
+        /* --- 1. Background Floating Hearts --- */
+        .bg-heart-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .bg-heart { animation: float 25s linear infinite; }
+
+        @keyframes float {
+            0% { transform: translateY(110vh) rotate(-45deg) scale(1); opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(-45deg) scale(1.5); opacity: 0; }
+        }
+        
+        .bg-heart:nth-child(1) { left: 10%; animation-delay: 0s; animation-duration: 20s; }
+        .bg-heart:nth-child(2) { left: 20%; animation-delay: 3s; animation-duration: 15s; width: 10px; height: 10px; background-color: var(--primary-pink); }
+        .bg-heart:nth-child(3) { left: 30%; animation-delay: 6s; animation-duration: 22s; }
+        .bg-heart:nth-child(4) { left: 40%; animation-delay: 1s; animation-duration: 18s; width: 20px; height: 20px; background-color: var(--primary-pink); }
+        .bg-heart:nth-child(5) { left: 50%; animation-delay: 8s; animation-duration: 14s; }
+        .bg-heart:nth-child(6) { left: 60%; animation-delay: 4s; animation-duration: 24s; width: 10px; height: 10px; }
+        .bg-heart:nth-child(7) { left: 70%; animation-delay: 2s; animation-duration: 17s; background-color: var(--primary-pink); }
+        .bg-heart:nth-child(8) { left: 80%; animation-delay: 7s; animation-duration: 19s; }
+        .bg-heart:nth-child(9) { left: 90%; animation-delay: 5s; animation-duration: 21s; background-color: var(--primary-pink); }
+        .bg-heart:nth-child(10) { left: 55%; animation-delay: 10s; animation-duration: 16s; }
+
+
+        /* --- 2. 'Yes' Click Heart Burst --- */
+        #heart-burst-container {
+            position: absolute;
+            bottom: 100px; 
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1px;
+            height: 1px;
+            z-index: 100;
+        }
+
+        .burst-heart { animation: burst 1.2s ease-out forwards; }
+
+        @keyframes burst {
+            0% { transform: translate(0, 0) rotate(-45deg) scale(0.1); opacity: 1; }
+            100% { transform: translate(var(--x), var(--y)) rotate(-45deg) scale(1.2); opacity: 0; }
+        }
+
+        /* --- 3. 'Yes' Click Main Heart Animation (NEW) --- */
+        .main-heart-pop {
+            position: absolute; 
+            bottom: 0; /* Starts from the burst container's position */
+            left: 50%; 
+            
+            /* Defining its own heart shape */
+            background-color: var(--primary-red);
+            width: 100px; /* Base size */
+            height: 100px;
+            transform: translateX(-50%) rotate(-45deg) scale(0.1); /* Initial state */
+            opacity: 0;
+            
+            animation: pop-up-heart 1s ease-out forwards;
+        }
+
+        .main-heart-pop::before,
+        .main-heart-pop::after {
+            content: '';
+            background-color: inherit;
+            border-radius: 50%;
+            position: absolute;
+            width: 100px; /* Match base size */
+            height: 100px;
+        }
+
+        .main-heart-pop::before { top: -50px; left: 0; }
+        .main-heart-pop::after { top: 0; left: 50px; }  
+        
+        @keyframes pop-up-heart {
+            0% {
+                transform: translateX(-50%) rotate(-45deg) scale(0.1);
+                opacity: 0.8;
+            }
+            50% {
+                transform: translateX(-50%) rotate(-45deg) scale(1.2);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(-50%) rotate(-45deg) scale(1.1);
+                opacity: 0;
+            }
+        }
+        
+        /* --- Post-Proposal State --- */
+        .final-message h2 {
+            font-family: var(--font-cursive);
+            font-size: 3rem;
+            color: var(--primary-red);
+        }
+        .final-message p {
+            font-size: 1.25rem;
+            margin-top: 0.5rem;
+        }
+
+        /* --- Mobile Responsive --- */
+        @media (max-width: 600px) {
+            h1 { font-size: 2.2rem; }
+            .main-message { font-size: 1.25rem; }
+            .proposal-container { padding: 2rem 1.5rem; min-height: 300px; }
+            
+            .button-container {
+                min-height: 100px;
+            }
+            #yes-btn {
+                width: 100%; 
+            }
+            #no-btn {
+                width: 80%; 
+                margin-top: 1rem; 
+            }
+
+            .funny-message {
+                top: -15px;
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+            .funny-message.show { top: -50px; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="bg-heart-container">
+        <div class="heart-shape bg-heart"></div>
+        <div class="heart-shape bg-heart"></div>
+        <div class="heart-shape bg-heart"></div>
+        <div class="heart-shape bg-heart"></div>
+        <div class="heart-shape bg-heart"></div>
+        <div class="heart-shape bg-heart"></div>
+        <div class="heart-shape bg-heart"></div>
+        <div class="heart-shape bg-heart"></div>
+        <div class="heart-shape bg-heart"></div>
+        <div class="heart-shape bg-heart"></div>
+    </div>
+
+    <div class="proposal-container">
+        
+        <div id="funny-message" class="funny-message"></div>
+
+        <h1 id="main-heading">Shreya, I want to tell you something…</h1>
+        <p class="main-message" id="main-message">Will you be mine forever?</p>
+
+        <div class="button-container" id="button-container">
+            <button id="yes-btn">Love You Too ❤️</button>
+            <button id="no-btn">No 😭</button>
+        </div>
+        
+        <div id="heart-burst-container"></div>
+    </div>
+
+    <script>
+        // Get elements from the DOM
+        const yesBtn = document.getElementById('yes-btn');
+        const noBtn = document.getElementById('no-btn');
+        const funnyMessage = document.getElementById('funny-message');
+        const mainHeading = document.getElementById('main-heading');
+        const mainMessage = document.getElementById('main-message');
+        const buttonContainer = document.getElementById('button-container');
+        const heartBurstContainer = document.getElementById('heart-burst-container');
+
+        // Funny, playful messages
+        const funnyMessages = [
+            "Button kharaab hai kya? Yes wala try karo! 😉",
+            "Pakda gaya! Ab toh 'Yes' bolna padega 😜",
+            "Aise kaise 'No'? Main itna bura hu kya? 😂",
+            "Error 404: 'No' option not found. Please try 'yes' ❤️",
+            "Ye 'No' button bhaag kyun raha hai? 🧐",
+            "Soch lo... 'Yes' bolne pe free pizza milega! 🍕",
+            "Galat button dab gaya, Lado! 🤣"
+        ];
+        
+        let messageTimer; // To keep track of the message timer
+
+        // --- Event Listener for 'No' Button ---
+        noBtn.addEventListener('click', () => {
+            // 1. Show a funny message
+            if (messageTimer) {
+                clearTimeout(messageTimer);
+            }
+            const randomIndex = Math.floor(Math.random() * funnyMessages.length);
+            funnyMessage.textContent = funnyMessages[randomIndex];
+            funnyMessage.classList.add('show');
+            
+            messageTimer = setTimeout(() => {
+                funnyMessage.classList.remove('show');
+                messageTimer = null; 
+            }, 5000); // Message stays for 5 seconds
+
+            // --- NEW: Make the button move anywhere ---
+            
+            // 1. Change position to 'fixed' to move anywhere on screen
+            noBtn.style.position = 'fixed'; 
+            noBtn.style.zIndex = '1000'; // Make sure it's on top of everything
+
+            // 2. Get coordinates of the 'Yes' button
+            const yesBtnRect = yesBtn.getBoundingClientRect();
+            
+            // 3. 25% chance to jump on top of the 'Yes' button
+            if (Math.random() < 0.25) {
+                noBtn.style.left = `${yesBtnRect.left}px`;
+                noBtn.style.top = `${yesBtnRect.top}px`;
+            } else {
+                // 4. Or, move to a random spot on the *entire screen*
+                const btnRect = noBtn.getBoundingClientRect();
+                const maxLeft = window.innerWidth - btnRect.width;
+                const maxTop = window.innerHeight - btnRect.height;
+    
+                let newLeft = Math.random() * maxLeft;
+                let newTop = Math.random() * maxTop;
+                
+                noBtn.style.left = `${newLeft}px`;
+                noBtn.style.top = `${newTop}px`;
+            }
+        });
+
+        // --- Event Listener for 'Yes' Button ---
+        yesBtn.addEventListener('click', () => {
+            // 1. Change the text
+            mainHeading.textContent = "Yaaay! She said Yes! 🎉";
+            mainMessage.textContent = "I love you more than anything!";
+            
+            // 2. Remove the buttons and show a final message
+            buttonContainer.innerHTML = `
+                <div class="final-message">
+                    <h2>I Love You, Shreya!</h2>
+                    <p>You are really a angle for me!</p>
+                </div>
+            `;
+            
+            // 3. Trigger the heart burst animation
+            createHeartBurst();
+            
+            // 4. --- NEW: Trigger the main heart pop animation ---
+            createMainHeartPop();
+            
+            // 5. Hide the 'No' message if it's showing
+            if (messageTimer) {
+                clearTimeout(messageTimer);
+            }
+            funnyMessage.classList.remove('show');
+        });
+
+        // --- NEW: Function to create the main heart pop ---
+        function createMainHeartPop() {
+            const heart = document.createElement('div');
+            heart.classList.add('main-heart-pop'); 
+            
+            heartBurstContainer.appendChild(heart);
+            
+            // Remove heart from DOM after animation finishes
+            setTimeout(() => {
+                heart.remove();
+            }, 1000); // Must be same duration as 'pop-up-heart' animation
+        }
+
+        // --- Function to create the heart burst effect ---
+        function createHeartBurst() {
+            const heartsToCreate = 30; 
+            
+            for (let i = 0; i < heartsToCreate; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('heart-shape', 'burst-heart');
+                
+                const x = (Math.random() - 0.5) * 400; 
+                const y = (Math.random() * -300) - 150; 
+                const color = Math.random() > 0.5 ? 'var(--primary-red)' : 'var(--primary-pink)';
+                const delay = Math.random() * 0.3; 
+                
+                heart.style.setProperty('--x', `${x}px`);
+                heart.style.setProperty('--y', `${y}px`);
+                heart.style.backgroundColor = color;
+                heart.style.animationDelay = `${delay}s`;
+                
+                heartBurstContainer.appendChild(heart);
+                
+                setTimeout(() => {
+                    heart.remove();
+                }, 1200); 
+            }
+        }
+
+    </script>
+</body>
+</html>
